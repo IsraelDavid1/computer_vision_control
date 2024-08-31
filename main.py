@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import pyautogui
 
 cap = cv2.VideoCapture(0)
 
@@ -7,6 +8,7 @@ cap = cv2.VideoCapture(0)
 
 yellow_lower = np.array([22, 93, 0])
 yellow_upper = np.array([45, 255, 255])
+prev_y = 0
 
 while True:
     ret, frame = cap.read()
@@ -19,6 +21,12 @@ while True:
         if area > 300:
             x, y, w, h = cv2.boundingRect(c)
             cv2.rectangle(frame, (x, y), (x+ w, y + h), (0, 255, 0), 2)
+            if y < prev_y:
+                pyautogui.press("down")
+            elif y > prev_y:
+                pyautogui.press("up")    
+            prev_y = y
+
     cv2.imshow('frame', frame)
     if cv2.waitKey(10)  == ord('q'):
         break
